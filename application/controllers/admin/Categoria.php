@@ -49,6 +49,17 @@ class Categoria extends CI_Controller {
         }
     }
 
+    public function excluir($id)
+    {
+        if($this->modelcategorias->excluir($id)) //se acessou o modelcategoria com a função add e conseguir add as categorias
+        {
+            redirect(base_url('admin/categoria'));
+        }
+        else
+        {
+            echo 'Houve um erro no sistema';
+        }
+    }
 }
 
 ?>

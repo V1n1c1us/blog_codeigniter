@@ -43,9 +43,17 @@ class Categorias_model extends CI_Model {
         return $this->db->get()->result(); //referenciando a tabela e manda o resultado pro controller
     }
 
-    public function adicionar($titulo){
+    public function adicionar($titulo)
+    {
         $dados['titulo'] = $titulo; //titulo que vem do fomr na posição título, coluna da tab categoria
         return $this->db->insert('categoria',$dados); //insere na tabela todos os dados dentro da var $dados
+    }
+
+    public function excluir($id)
+    {
+        $this->db->where('md5(id)',$id);
+        return $this->db->delete('categoria');
+
     }
 
  
