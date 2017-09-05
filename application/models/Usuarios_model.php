@@ -31,6 +31,24 @@ class Usuarios_model extends CI_Model {
         $this->db->order_by('nome','ASC');
         return $this->db->get()->result();
     }
+
+    public function adicionar($nomeUser, $emailUser, $historicoUser, $user, $userSenha)
+    {
+        $dados['nome'] = $nomeUser; //titulo que vem do fomr na posição título, coluna da tab categoria
+        $dados['email'] = $emailUser;
+        $dados['historico'] = $historicoUser;
+        $dados['user'] = $user;
+        $dados['senha'] = md5($userSenha);
+        
+        return $this->db->insert('usuario',$dados); //insere na tabela todos os dados dentro da var $dados
+    }
+
+    public function excluir($id)
+    {
+        $this->db->where('md5(id)',$id);
+        return $this->db->delete('usuario');
+
+    }
 }
 
 ?>

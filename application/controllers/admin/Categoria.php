@@ -6,8 +6,15 @@ class Categoria extends CI_Controller {
 
     public function __construct(){
         parent::__construct();
+
+        if(!$this->session->userdata('logado')){ //tudo que colocar aqui, vai ser falnso quando for falsa manda pro login
+            redirect(base_url('admin/login'));
+        }
+
         $this->load->model('categorias_model','modelcategorias'); // apelido ao model alias
         $this->categorias = $this->modelcategorias->listar_categorias(); // this categorias, recebe tudo o que foi listado do método listar_categorias
+
+        
     }
 
     public function index()

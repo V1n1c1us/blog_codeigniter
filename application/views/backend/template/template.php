@@ -21,10 +21,10 @@
                             <a href="<?php echo base_url('admin/postagem');?>"><i class="fa fa-edit fa-fw"></i> Postagens</a>
                         </li>
                         <li>
-                            <a href="<?php echo base_url('admin/usuario');?>"><i class="fa fa-wrench fa-fw"></i> Usuários</a>
+                            <a href="<?php echo base_url('admin/usuarios');?>"><i class="fa fa-wrench fa-fw"></i> Usuários</a>
                         </li>
                         <li>
-                            <a href="<?php echo base_url('admin/categoria');?>"><i class="fa fa-sign-out fa-fw"></i> Sair do Sistema</a>
+                            <a href="<?php echo base_url('admin/usuarios/logout');?>"><i class="fa fa-sign-out fa-fw"></i> Sair do Sistema</a>
                         </li>
                     </ul>
                 </div>
