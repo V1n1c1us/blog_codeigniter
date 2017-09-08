@@ -200,6 +200,7 @@ class Usuarios extends CI_Controller {
         $dadosSessao['userLogado'] = NULL;
         $dadosSessao['logado'] = FALSE;
         $this->session->set_userdata($dadosSessao); //registra no banco
+        $this->session->set_flashdata('aviso', '<div class="alert alert-info">Deslogado do sistema</div>');
         redirect(base_url('admin/login'));   
     }
 
