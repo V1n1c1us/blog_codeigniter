@@ -49,6 +49,32 @@ class Usuarios_model extends CI_Model {
         return $this->db->delete('usuario');
 
     }
+
+    public function listar_usuario($id)
+    {
+        $this->db->select('id,nome,historico,email,user,img');
+        $this->db->from('usuario');
+        $this->db->where('md5(id)', $id);
+        return $this->db->get()->result();
+    }
+
+    public function alterar($nome, $email, $historico, $user, $senha, $id)
+    {
+        $dados['nome'] = $nome;
+        $dados['email'] = $email;
+        $dados['historico'] = $historico;
+        $dados['user'] = $user;
+        $dados['senha'] = md5($senha);
+        $this->db->where('id', $id);
+        return $this->db->update('usuario', $dados);
+    }
+
+    public function alterar_img($id)
+    {
+        $dados['img'] = 1;
+        $this->db->where('md5(id)', $id);
+        return $this->db->update('usuario', $dados);
+    }
 }
 
 ?>

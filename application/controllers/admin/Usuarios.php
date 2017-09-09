@@ -81,11 +81,7 @@ class Usuarios extends CI_Controller {
         }
         $this->load->model('usuarios_model','modelUsuarios');
 
-        if(!$this->session->userdata('logado')){ //tudo que colocar aqui, vai ser falnso quando for falsa manda pro login
-            redirect(base_url('admin/login'));
-        }
-
-        if($this->modelUsuarios-->excluir($id)) //se acessou o modelcategoria com a função add e conseguir add as categorias
+        if($this->modelUsuarios->excluir($id)) //se acessou o modelcategoria com a função add e conseguir add as categorias
         {
             redirect(base_url('admin/usuarios'));
         }
@@ -100,44 +96,100 @@ class Usuarios extends CI_Controller {
         if(!$this->session->userdata('logado')){ //tudo que colocar aqui, vai ser falnso quando for falsa manda pro login
             redirect(base_url('admin/login'));
         }
-        $this->load->model('usuarios_model','modelUsuarios');
+        $this->load->model('usuarios_model','modelUsuarios'); //carrega o model
 
-        $this->load->library('table');
         //enviando pra view
-        $dados['categorias'] = $this->modelcategorias->listar_categoria($id);
+        $dados['usuarios'] = $this->modelUsuarios->listar_usuario($id);
         //dados a serem enviados para o cabeçalho
         $dados['titulo'] = 'Painel de Controle';
-        $dados['subtitulo'] = 'Categoria';
+        $dados['subtitulo'] = 'Usuários';
 
         $this->load->view('backend/template/html-header', $dados);
         $this->load->view('backend/template/template');
-        $this->load->view('backend/alterar-categoria');
+        $this->load->view('backend/alterar-usuario');
         $this->load->view('backend/template/html-footer');
     }
 
     public function salvar_alteracoes()
     {
+        if(!$this->session->userdata('logado')){ //tudo que colocar aqui, vai ser falnso quando for falsa manda pro login
+            redirect(base_url('admin/login'));
+        }
+        $this->load->model('usuarios_model','modelUsuarios');
+        
         $this->load->library('form_validation');
-        $this->form_validation->set_rules('txt-categoria','Nome da Categoria',
-                                          'required|min_length[3]|is_unique[categoria.titulo]');
+        $this->form_validation->set_rules('txt-nome','Nome do Usuário',
+                                          'required|min_length[3]');
+        $this->form_validation->set_rules('txt-email','Email',
+                                          'required|valid_email');
+        $this->form_validation->set_rules('txt-historico','Histórico',
+                                          'required|min_length[20]');                                          
+        $this->form_validation->set_rules('txt-user','User',
+                                          'required|min_length[3]|is_unique[usuario.user]');                                                                                    
+        $this->form_validation->set_rules('txt-senha','Senha',
+                                          'required|min_length[3]');                                                                                    
+        $this->form_validation->set_rules('txt-confir-senha','Confirmar Senha',
+                                          'required|matches[txt-senha]');   
         if($this->form_validation->run()== FALSE)
         {
-            $this->index();
+            $this->alterar();
         }
         else
         {
-            $titulo = $this->input->post('txt-categoria');//recebe os dadso
+            $nome = $this->input->post('txt-nome');
+            $email = $this->input->post('txt-email');
+            $historico = $this->input->post('txt-historico');
+            $user = $this->input->post('txt-user');
+            $senha = $this->input->post('txt-senha');
             $id = $this->input->post('txt-id');
             //envia pro model
-            if($this->modelcategorias->alterar($titulo, $id)) //se acessou o modelcategoria com a função add e conseguir add as categorias
+            if($this->modelUsuarios->alterar($nome, $email, $historico, $user, $senha, $id)) //se acessou o modelcategoria com a função add e conseguir add as categorias
             {
-                redirect(base_url('admin/categoria'));
+                redirect(base_url('admin/usuarios'));
             }
             else
             {
                 echo 'Houve um erro no sistema';
             }
         } 
+    }
+
+    public function nova_foto()
+    {
+        if(!$this->session->userdata('logado')){ //tudo que colocar aqui, vai ser falnso quando for falsa manda pro login
+            redirect(base_url('admin/login'));
+        }
+        $this->load->model('usuarios_model','modelUsuarios'); //carrega o model
+
+        $id = $this->input->post('id'); //recebe o id
+        //configura o upload
+        $config['upload_path'] = './assets/frontend/img/usuarios'; //caminho da img salva
+        $config['allowed_types'] = 'jpg'; //tipo de arquivo suportado
+        $config['file_name'] = $id.".jpg";
+        $config['overwrite'] = TRUE;
+        $this->load->library('upload', $config); //carrega a biblioteca de upload
+
+        if(!$this->upload->do_upload()){
+            echo $this->upload->display_errors();
+        }else{
+            $config2['source_image'] = './assets/frontend/img/usuarios/'.$id.'.jpg';
+            $config2['create_thumb'] = FALSE;
+            $config2['width'] = 200;
+            $config2['height'] = 200;
+            $this->load->library('image_lib', $config2);
+            if($this->image_lib->resize()){
+
+                if($this->modelUsuarios->alterar_img($id)) //se acessou o modelcategoria com a função add e conseguir add as categorias
+                {
+                    redirect(base_url('admin/usuarios/alterar/'.$id));
+                }else{
+                    echo 'Houve um erro no sistema';
+                }
+            }else{
+                echo $this->image_lib->display_errors();
+            }
+        }
+        
     }
 
     public function pag_login()
@@ -200,7 +252,6 @@ class Usuarios extends CI_Controller {
         $dadosSessao['userLogado'] = NULL;
         $dadosSessao['logado'] = FALSE;
         $this->session->set_userdata($dadosSessao); //registra no banco
-        $this->session->set_flashdata('aviso', '<div class="alert alert-info">Deslogado do sistema</div>');
         redirect(base_url('admin/login'));   
     }
 

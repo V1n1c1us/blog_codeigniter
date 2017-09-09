@@ -69,11 +69,22 @@
                 <div class="panel-body">
                     <div class="row">
                         <div class="col-lg-12">
+                        <style>
+                            img{
+                                width: 60px;
+                            }
+                        </style>
                             <?php
                                 $this->table->set_heading("Foto","Nome do Usuário","Alterar","Excluir");
+
                             foreach ( $usuarios as $usuario ){
                                 $nomeUser = $usuario->nome;
-                                $fotoUser = "Foto";
+                                
+                            if($usuario->img == 1){
+                                $fotoUser = img("assets/frontend/img/usuarios/".md5($usuario->id).".jpg");
+                            }else{
+                                $fotoUser = img("assets/frontend/img/semFoto.jpg");
+                            }
                                 $alterar= anchor(base_url('admin/usuarios/alterar/'.md5($usuario->id)),'<i class="fa fa-refresh fa-fw"></i>Alterar');
                                 $excluir= anchor(base_url('admin/usuarios/excluir/'.md5($usuario->id)),'<i class="fa fa-remove fa-fw"></i>Excluir');
 

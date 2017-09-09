@@ -51,7 +51,7 @@ class Categoria extends CI_Controller {
             }
             else
             {
-                echo 'Houve um erro no sistema';
+                //echo 'Houve um erro no sistema';
             }
         }
     }

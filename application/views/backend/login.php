@@ -9,7 +9,18 @@
                  <?php 
                       echo validation_errors('<div class="alert alert-danger">','</div>');
                       echo form_open('admin/usuarios/login');
-                 ?>                
+
+
+                 ?>    
+                 <?php if($error = $this->session->flashdata('login_failed')){?>
+                 <div class="row">
+                     <div class="col-6">
+                         <div class="alert alert-danger"></div>
+                         <?php echo $error?>
+                     </div>
+                 </div>
+            <?php }?>
+
                      <fieldset>
                          <div class="form-group">
                              <input class="form-control" placeholder="Usuário" name="txt-user" type="text" autofocus>
